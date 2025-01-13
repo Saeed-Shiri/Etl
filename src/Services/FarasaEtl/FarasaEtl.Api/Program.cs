@@ -4,12 +4,15 @@ using FarasaEtl.Infrastructure.Data.Hangfire;
 using FarasaEtl.Infrastructure.Data.Target;
 using Hangfire;
 using FarasaEtl.Infrastructure.SystemLogs;
+using Elastic.Ingest.Elasticsearch.Serialization;
+using Serilog.Extensions.Logging;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.CreateLog();
-
+builder.Logging.AddProvider(new SerilogLoggerProvider(Log.Logger));
 Logging.Information("THIS IS INFO");
 Logging.Error("THIS IS ERROR");
 // Add services to the container.
