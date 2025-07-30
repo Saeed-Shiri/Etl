@@ -1,0 +1,6 @@
+@ArpaSync.WebApi_HostAddress = http://localhost:5003
+
+GET {{ArpaSync.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
