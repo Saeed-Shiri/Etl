@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  arpa-sync-api:
+    build:
+      context: .
+      dockerfile: src/WebApi/ArpaSync.WebApi/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ArpaSync;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true;
+      - ArpaApi__BaseUrl=https://api.arpa.example.com
+      - ArpaApi__ApiKey=your-arpa-api-key-here
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - arpa-sync-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - arpa-sync-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  arpa-sync-network:
+    driver: bridge
